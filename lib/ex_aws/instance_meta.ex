@@ -18,7 +18,9 @@ defmodule ExAws.InstanceMeta do
 
       {:ok, %{status_code: status_code}} ->
         raise """
-        Instance Meta Error: HTTP response status code #{inspect(status_code)}
+        Instance Meta Error: 
+        URL: #{inspect(url)}
+        HTTP response status code: #{inspect(status_code)}
 
         Please check AWS EC2 IAM role.
         """
@@ -26,6 +28,7 @@ defmodule ExAws.InstanceMeta do
       error ->
         raise """
         Instance Meta Error: #{inspect(error)}
+        URL: #{inspect(url)}
 
         You tried to access the AWS EC2 instance meta, but it could not be reached.
         This happens most often when trying to access it from your local computer,
