@@ -1,5 +1,6 @@
 defmodule ExAws.Config.AuthCache do
   use GenServer
+  require Logger
 
   @moduledoc false
 
@@ -78,7 +79,9 @@ defmodule ExAws.Config.AuthCache do
   def refresh_config(config, ets) do
     auth = ExAws.InstanceMeta.security_credentials(config)
     :ets.insert(ets, {:aws_instance_auth, auth})
-    Process.send_after(self(), {:refresh_config, config}, refresh_in(auth[:expiration]))
+    refresh_after = refresh_in(auth[:expiration])
+    Logger.info(fn -> "ex_aws: refresh_config finished expiration=#{auth[:expiration]} refresh_after=#{refresh_after}" end)
+    Process.send_after(self(), {:refresh_config, config}, refresh_after)
     auth
   end
 
